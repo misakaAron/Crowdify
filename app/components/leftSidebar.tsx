@@ -5,6 +5,7 @@ import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import { useWebSocket } from "../context/WebContext";
 import Switch from "@/components/fancy/Button1";
 import CopyButton from "@/components/fancy/CopytoClipboard";
+import AdminPanel from "./AdminPanel";
 import { FC, useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import axios from "axios";
@@ -149,6 +150,9 @@ const handleSearch = async () => {
 
         <div className="flex flex-col gap-2">
           <span className="text-sm text-gray-700 font-semibold font-funnel">Total Users: <span className="font-funnel text-base text-blue-600">{userCount}</span></span>
+
+          {isAdmin && <AdminPanel roomId={roomId} />}
+
           {songAddStatus || isAdmin ? (
             <>
               <div className="flex flex-col md:flex-row gap-2">

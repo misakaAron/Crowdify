@@ -29,8 +29,23 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Room not found" }, { status: 404 });
       }
   
-      // console.log("room details", room);
-      const isAdmin = user ? user.id === room.adminId : false;
+      // Check both room creator and RoomUser role for admin status
+      let isAdmin = false;
+      if (user) {
+        if (user.id === room.adminId) {
+          isAdmin = true;
+        } else {
+          const roomUser = await prismaClient.roomUser.findUnique({
+            where: {
+              userId_roomId: {
+                userId: user.id,
+                roomId: room.id,
+              },
+            },
+          });
+          isAdmin = roomUser?.role === "ADMIN";
+        }
+      }
   
       return NextResponse.json({ room, isAdmin, userId: user?.id });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
